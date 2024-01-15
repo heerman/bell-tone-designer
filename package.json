@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.71",
-    "@types/react": "^18.2.48",
+    "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,13 +20,19 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --fix"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "indent": ["error", 4],
+      "semi": ["error", "never"],
+      "quotes": ["error", "double"]
+    }
   },
   "browserslist": {
     "production": [
