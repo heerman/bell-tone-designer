@@ -44,17 +44,25 @@ const playAudio = () => {
 
 function Bell() {
     const [wobbling, setWobbling] = useState(false)
+
+    const handleClick = () => {
+        playAudio()
+
+        // temporarily set wobbling to false to ensure animation re-triggers
+        setWobbling(false)
+
+        // use a brief timeout to ensure the animation is re-applied
+        setTimeout(() => {
+            setWobbling(true)
+            setTimeout(() => setWobbling(false), 3500)
+        }, 50)
+    }
+
     return <>
         <div className="bell-icon" style={ wobbling ? { animation: "bell-wobble 0.35s 17" } : {}} >
             🔔
         </div>
-        <button
-            className="striker-button"
-            onClick={() => {
-                playAudio()
-                setWobbling(true)
-                setTimeout(() => setWobbling(false), 10000)
-            }}>
+        <button className="striker-button" onClick={handleClick}>
             STRIKE
         </button>
     </>
