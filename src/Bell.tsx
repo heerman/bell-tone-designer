@@ -1,18 +1,44 @@
 import "./Bell.css"
 
+/* Generate a bell tone with FM synthesis */
 const playAudio = async () => {
-    const DECAY_SEC = 2
+    // parameters
+    const CARRIER_FREQ = 440
+    const MOD_FREQ = 700
+    const FM_AMOUNT = 400
+    const DECAY_SEC = 5
+
     const audioContext = new window.AudioContext()
 
-    const osc = new OscillatorNode(audioContext, { frequency: 660, type: "sine" })
-    osc.start()
+    // carrier
+    const osc = new OscillatorNode(audioContext, { frequency: CARRIER_FREQ, type: "sine" })
 
+    // amplitude envelope
     const ampEnv = audioContext.createGain()
-    const gainParam = ampEnv.gain
-    gainParam.setValueAtTime(1, audioContext.currentTime)
-    gainParam.linearRampToValueAtTime(0, audioContext.currentTime + DECAY_SEC)
+    const ampEnvGainParam = ampEnv.gain
+    ampEnvGainParam.setValueAtTime(1, audioContext.currentTime)
+    ampEnvGainParam.linearRampToValueAtTime(0, audioContext.currentTime + DECAY_SEC)
 
-    osc.connect(ampEnv).connect(audioContext.destination)
+    // modulator
+    const modSine = new OscillatorNode(audioContext, { frequency: MOD_FREQ, type: "sine" })
+
+    // fm envelope: ramp amount to 0
+    const modSineGain = audioContext.createGain()
+    const modSineGainParam = modSineGain.gain
+    modSineGainParam.setValueAtTime(FM_AMOUNT, audioContext.currentTime)
+    modSineGainParam.linearRampToValueAtTime(0, audioContext.currentTime + DECAY_SEC * 0.95)
+
+    // connect mod to carrier frequency
+    modSine.connect(modSineGain)
+    modSineGain.connect(osc.frequency)
+
+    // connect carrier to audio_out
+    osc.connect(ampEnv)
+    ampEnv.connect(audioContext.destination)
+
+    // start oscillators now
+    osc.start()
+    modSine.start()
 }
 
 function Bell() {
