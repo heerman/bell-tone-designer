@@ -1,7 +1,8 @@
+import React, { useState } from "react"
 import "./Bell.css"
 
 /* Generate a bell tone with FM synthesis */
-const playAudio = async () => {
+const playAudio = () => {
     // parameters
     const CARRIER_FREQ = 440
     const MOD_FREQ = 700
@@ -42,9 +43,20 @@ const playAudio = async () => {
 }
 
 function Bell() {
+    const [wobbling, setWobbling] = useState(false)
     return <>
-        <div className="bell-icon">🔔</div>
-        <button className="striker-button" onClick={playAudio}>STRIKE</button>
+        <div className="bell-icon" style={ wobbling ? { animation: "bell-wobble 0.35s 17" } : {}} >
+            🔔
+        </div>
+        <button
+            className="striker-button"
+            onClick={() => {
+                playAudio()
+                setWobbling(true)
+                setTimeout(() => setWobbling(false), 10000)
+            }}>
+            STRIKE
+        </button>
     </>
 }
 
