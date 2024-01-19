@@ -1,9 +1,9 @@
-import "./App.css"
+import React from "react"
 import Bell from "./Bell"
+import "./App.css"
 
 function App() {
     return <div className="App">
-        <header className="App-header">Bell Tone Designer</header>
         <Bell />
     </div>
 }
